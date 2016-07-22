@@ -358,6 +358,16 @@ local ast = {
 }
 
 
+local index
+local token
+local previousToken
+local lookahead
+local comments
+local tokenStart
+local line
+local lineStart
+
+
 
 function finishNode(node)
   -- Pop a `Marker` off the location-array and attach its location data.
@@ -536,17 +546,6 @@ end
 --
 -- `lex()` starts lexing and returns the following token in the stream.
 
-local index
-local token
-local previousToken
-local lookahead
-local comments
-local tokenStart
-local line
-local lineStart
-
-
-
 function charAt(str, index)
   return string.sub(str, index, index)
 end
@@ -593,7 +592,7 @@ function lex()
     skipWhiteSpace()
   end
 
-  if index > length then
+  if index >= length then
     return {
       type = EOF,
       value = '<eof>',
@@ -864,7 +863,7 @@ function scanStringLiteral()
       stringStart = index
     -- EOF or `\n` terminates a string literal. If we haven't found the
     -- ending delimiter by now, raise an exception.
-    elseif index >= length or isLineTerminator(charCode) then
+    elseif index > length or isLineTerminator(charCode) then
       string = string..string.sub(input, stringStart, index - 2)
       raise({}, errors.unfinishedString, string..string.char(charCode))
     end
