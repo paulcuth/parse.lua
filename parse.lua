@@ -592,7 +592,7 @@ function lex()
     skipWhiteSpace()
   end
 
-  if index >= length then
+  if index > length then
     return {
       type = EOF,
       value = '<eof>',
@@ -849,7 +849,7 @@ function scanStringLiteral()
   local stringStart = index
   local string = ''
 
-  while index < length do
+  while index <= length do
     local charCode = charCodeAt(input, index)
     moveNext()
 
@@ -863,7 +863,7 @@ function scanStringLiteral()
       stringStart = index
     -- EOF or `\n` terminates a string literal. If we haven't found the
     -- ending delimiter by now, raise an exception.
-    elseif index > length or isLineTerminator(charCode) then
+    elseif index > length or isLineTerminator(charCode) then    
       string = string..string.sub(input, stringStart, index - 2)
       raise({}, errors.unfinishedString, string..string.char(charCode))
     end
@@ -1220,7 +1220,7 @@ function readLongString()
 
   stringStart = index
 
-  while index < length do
+  while index <= length do
     -- To keep track of line numbers run the `consumeEOL()` which increments
     -- its counter.
     if isLineTerminator(currentCharCode()) then 
@@ -1575,7 +1575,7 @@ function parseBlock(terminator)
       table.insert(block, statement)
     end
   end
-  
+
   -- Doesn't really need an ast node
   return block
 end
@@ -1589,10 +1589,8 @@ end
 
 function parseStatement()
   markLocation()
-
   if Keyword == token.type then
     local result
-
     if token.value == 'local' then
       next()
       return parseLocalStatement()
