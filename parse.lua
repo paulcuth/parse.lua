@@ -1298,34 +1298,30 @@ end
 -- ### Validation functions
 
 function isWhiteSpace(charCode)
-  return 9 == charCode or 32 == charCode or 0xB == charCode or 0xC == charCode
+  return charCode and 9 == charCode or 32 == charCode or 0xB == charCode or 0xC == charCode
 end
 
 function isLineTerminator(charCode)
-  return 10 == charCode or 13 == charCode
+  return charCode and 10 == charCode or 13 == charCode
 end
 
 function isDecDigit(charCode)
-  return charCode >= 48 and charCode <= 57
+  return charCode and charCode >= 48 and charCode <= 57
 end
 
 function isHexDigit(charCode)
-  return (charCode >= 48 and charCode <= 57) or (charCode >= 97 and charCode <= 102) or (charCode >= 65 and charCode <= 70)
+  return charCode and (charCode >= 48 and charCode <= 57) or (charCode >= 97 and charCode <= 102) or (charCode >= 65 and charCode <= 70)
 end
 
 -- From [Lua 5.2](http:--www.lua.org/manual/5.2/manual.html#8.1) onwards
 -- identifiers cannot use locale-dependet letters.
 
 function isIdentifierStart(charCode)
-  return (charCode >= 65 and charCode <= 90) or (charCode >= 97 and charCode <= 122) or 95 == charCode;
+  return charCode and (charCode >= 65 and charCode <= 90) or (charCode >= 97 and charCode <= 122) or 95 == charCode;
 end
 
 function isIdentifierPart(charCode)
-  if charCode == nil then 
-    return false
-  end
-
-  return (charCode >= 65 and charCode <= 90) or (charCode >= 97 and charCode <= 122) or 95 == charCode or (charCode >= 48 and charCode <= 57);
+  return charCode and (charCode >= 65 and charCode <= 90) or (charCode >= 97 and charCode <= 122) or 95 == charCode or (charCode >= 48 and charCode <= 57);
 end
 
 -- [3.1 Lexical Conventions](http:--www.lua.org/manual/5.2/manual.html#3.1)
